@@ -52,31 +52,28 @@ int Simulation::get_pop()
 void Simulation::set_matrices()
 {
     V.resize(cells.size(), 3);
-    for (auto& p : cells)
+    N.resize(cells.size(), 3);
+    for (const auto& p : cells)
     {
-        Vec3 pos = p->position;
-        V(p->index, 0) = pos.x();
-        V(p->index, 1) = pos.y();
-        V(p->index, 2) = pos.z();
+        V.row(p->index) << p->position.transpose();
+        N.row(p->index) << p->normal.transpose();
     }
 
     int num_faces = 0;
-    for (auto& p : cells)
+    for (const auto& p : cells)
     {
         num_faces += p->links.size();
     }
 
     F.resize(num_faces, 3);
-    int cur_face = 0;
-    for (auto& p : cells)
+    size_t cur_face = 0;
+    for (const auto& p : cells)
     {
         for (int i=0; i<p->links.size(); i++)
         {
-            Particle* c = p->links[i];
-            Particle* b = p->links[(i+1)% (p->links.size())];
-            F(cur_face, 0) = p->index;
-            F(cur_face, 1) = b->index;
-            F(cur_face, 2) = c->index;
+            const int c_index = p->links[i]->index;
+            const int b_index = p->links[(i+1)% (p->links.size())]->index;
+            F.row(cur_face) << p->index, b_index, c_index;
             cur_face++;
         }
     }
@@ -250,7 +247,7 @@ void Simulation::add_food()
                         p->special_baby = true;
                     }
                 }
-				else if (p->generation < 3)
+				else if (p->generation < 1)
                 {
                     p->food += p->area;
                 }

@@ -50,6 +50,7 @@ int main()
 				{
 					std::lock_guard<std::mutex> lock(write_mesh);
 					v.data.set_mesh(s.V, s.F);
+					v.data.set_normals(s.N);
 				}
                 redraw = false;
             }

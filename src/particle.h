@@ -19,7 +19,7 @@ public:
     int age         = 0;    // age of particle
     int generation  = 0;
 
-    int box         = -1;   // box index in the grid
+    long long box    = -1;   // box index in the grid
 
     double food      = 0;
     double area      = 0;    // sum of area of adjacent triangles

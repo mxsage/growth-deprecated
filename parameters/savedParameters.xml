@@ -1,14 +1,14 @@
 <Root>
-    <spring_factor>0.3</spring_factor>
-    <spring_length>0.1</spring_length>
-    <planar_factor>1</planar_factor>
+    <spring_factor>0.8</spring_factor>
+    <spring_length>0.0</spring_length>
+    <planar_factor>.5</planar_factor>
     <bulge_factor>0.04</bulge_factor>
-    <collision_factor>1</collision_factor>
-    <collision_radius>.6</collision_radius>
-    <dampening>.3</dampening>
+    <collision_factor>2</collision_factor>
+    <collision_radius>.9</collision_radius>
+    <dampening>.2</dampening>
     <threshold>44</threshold>
     <max_degree>20</max_degree>
-    <init_shape>PLY</init_shape>
+    <init_shape>OCTAHEDRON</init_shape>
     <food_mode>CURVATURE</food_mode>
     <split_mode>LONG</split_mode>
     <save_frequency>10</save_frequency>

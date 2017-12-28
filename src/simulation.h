@@ -18,8 +18,6 @@
 #include "grid.h"
 #include "particle.h"
 
-#include "sage_runs.h"
-
 using namespace parameters;
 
 class Simulation {
@@ -35,6 +33,7 @@ public:
 
     Eigen::MatrixXd V;
     Eigen::MatrixXi F;
+	Eigen::MatrixXd N;
     void set_matrices();
 
     /* big array to hold all the cells */

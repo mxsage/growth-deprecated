@@ -13,7 +13,6 @@
 /*
 #include <nanogui/formhelper.h>
 #include <nanogui/screen.h>
-#define IGL_VIEWER_WITH_NANOGUI
 */
 
 #include <igl/viewer/Viewer.h>
