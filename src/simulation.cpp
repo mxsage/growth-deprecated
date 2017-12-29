@@ -69,7 +69,7 @@ void Simulation::set_matrices()
     size_t cur_face = 0;
     for (const auto& p : cells)
     {
-        for (int i=0; i<p->links.size(); i++)
+        for (size_t i=0; i<p->links.size(); i++)
         {
             const int c_index = p->links[i]->index;
             const int b_index = p->links[(i+1)% (p->links.size())]->index;
@@ -261,7 +261,7 @@ void Simulation::split()
     bool did_split = false;
     int new_pop = cells.size();
     int fixed_pop = new_pop;
-    for (int i=0; i<fixed_pop; i++)
+    for (auto i=0; i<fixed_pop; i++)
     {
         if (cells[i]->frozen || cells[i]->environs)
         {
@@ -324,7 +324,7 @@ void Simulation::collision_grid()
     float c_sq = param.collision_radius * param.collision_radius;
     for (auto& p : cells)
 	{
-        for (int n : g->get_neighbors(p))
+        for (auto n : g->get_neighbors(p))
 		{
             auto& q = cells[n];
             Vec3 disp = p->position - q->position;
@@ -353,9 +353,9 @@ void Simulation::collision_grid()
 
 void Simulation::brute_force_collision(){
     float c_sq = param.collision_radius * param.collision_radius;
-    for (int i=0; i<cells.size(); i++)
+    for (size_t i=0; i<cells.size(); i++)
     {
-        for (int j=0; j<cells.size(); j++)
+        for (size_t j=0; j<cells.size(); j++)
         {
             Vec3 disp = cells[i]->position - cells[j]->position;
             float dist = disp.squaredNorm();
