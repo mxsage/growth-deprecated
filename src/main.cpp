@@ -63,8 +63,10 @@ int main()
         {
             if (key == ' ')
             {
+                std::ostringstream ss;
+                ss << "./build/frame" << s.frame_num << ".ply";
 				std::lock_guard<std::mutex> lock(write_mesh);
-                igl::writePLY("./bin/current_frame.ply", s.V, s.F);
+                igl::writePLY(ss.str(), s.V, s.F);
             }
             return false;
         };

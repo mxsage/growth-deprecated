@@ -1,4 +1,4 @@
-bin/*
+build/*
 .DS_Store
 *.swp
 *.o
