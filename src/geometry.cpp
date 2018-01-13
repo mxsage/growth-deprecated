@@ -13,7 +13,7 @@ std::vector<Particle*> Geometry::create_geometry(Parameters param)
 
     else if (param.init_shape == Shape::PLY)
     {
-        PlyLoader ply(param.filename);
+        PlyLoader ply(outputPath + "models/" + param.filename);
         cells = ply.create_sim();
     }
 

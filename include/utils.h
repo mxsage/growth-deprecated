@@ -2,12 +2,11 @@
 
 #include <Eigen/Dense>
 #include <string>
-#include <cassert>
 
-using Vec3=Eigen::Vector3d;
+using Vec3 = Eigen::Vector3d;
 
-static const std::string outputPath = "parameters/";
+static const std::string outputPath = "/Users/sagejenson/dev/cellgrow_test/";
 
-inline void throw_runtime_error(std::string msg){
+inline void throw_runtime_error(const std::string msg){
     throw std::runtime_error(msg);
 }

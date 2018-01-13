@@ -4,7 +4,7 @@ int main()
 {
     /* initialize and set simulation parameters */
     Parameters p;
-	parameters::readParams(outputPath + "savedParameters.xml", p);
+	parameters::readParams(outputPath + "parameters/savedParameters.xml", p);
 
 	std::cout << p.filename << std::endl;
 

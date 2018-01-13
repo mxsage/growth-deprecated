@@ -10,10 +10,5 @@
 #include <mutex>
 #include <sstream>
 
-/*
-#include <nanogui/formhelper.h>
-#include <nanogui/screen.h>
-*/
-
 #include <igl/viewer/Viewer.h>
 #include <igl/writePLY.h>

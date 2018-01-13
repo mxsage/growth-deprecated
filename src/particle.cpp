@@ -101,9 +101,9 @@ Particle* Particle::get_next(const Particle* p)
 
 Particle* Particle::get_next(const Particle* p_0, const Particle* p_1)
 {
-    for (int i=0; i<links.size(); i++)
+    for (size_t i=0; i<links.size(); i++)
     {
-        for (int j=0; j<p_1->links.size(); j++)
+        for (size_t j=0; j<p_1->links.size(); j++)
         {
             if ((links[i] == p_1->links[j])
                     and (links[i] != p_0)
@@ -137,7 +137,7 @@ void Particle::order_neighbors()
     temp[0] = links[0];
     temp[1] = get_next(temp[0]);
 
-    for (int i=2; i<links.size(); i++)
+    for (size_t i=2; i<links.size(); i++)
     {
         temp[i] = get_next(temp[i-2], temp[i-1]);
     }
@@ -151,7 +151,7 @@ void Particle::calculate_normal()
 
     Vec3 new_normal;
 
-    for (int i=0; i<links.size(); i++)
+    for (size_t i=0; i<links.size(); i++)
     {
         Vec3 c = links[i]->position;
         Vec3 d = links[(i+1)%links.size()]->position;
@@ -208,7 +208,7 @@ void Particle::add_spring_force(const double spring_factor, const double spring_
 void Particle::calculate_planar_target()
 {
     planar_target.setZero();
-    for (int i=0; i<links.size(); i++)
+    for (size_t i=0; i<links.size(); i++)
     {
         planar_target += links[i]->position;
     }
@@ -226,7 +226,7 @@ void Particle::add_bulge_force(const double bulge_factor, const double spring_le
 {
     double bulge_dist = 0;
     double theta_l, theta_d, theta_c, radicand;
-    for (int i=0; i<links.size(); i++)
+    for (size_t i=0; i<links.size(); i++)
     {
         Vec3 d = links[i]->position - position;
         theta_l = acos(d.dot( normal) / d.norm());
@@ -263,10 +263,10 @@ int Particle::find_shortest_axis()
     order_neighbors();
     double min_len{0};
     int shortest_idx = -1;
-    for (int i=0; i<links.size(); i++)
+    for (size_t i=0; i<links.size(); i++)
     {
         double distance = (position - links[i]->position).norm();
-        int opposite = (i + (links.size()/2)) % links.size();
+        size_t opposite = (i + (links.size()/2)) % links.size();
         distance += (position - links[opposite]->position).norm();
         if (distance < min_len || i==0)
         {
@@ -281,7 +281,7 @@ int Particle::find_longest_axis(){
     order_neighbors();
     double max_len = std::numeric_limits<double >::max();
     int longest_index = 0;
-    for (int i=0; i<links.size(); i++)
+    for (size_t i=0; i<links.size(); i++)
     {
         double distance = (position - links[i]->position).norm();
         int opposite = (i + (links.size()/2)) % links.size();
@@ -306,15 +306,15 @@ void Particle::set_links(Particle* baby, const bool longest)
         std::rotate(links.begin(), links.begin() + shortest_idx, links.end());
     }
 
-    int o_num_links = links.size();
+    size_t o_num_links = links.size();
     Particle* removeable[links.size()/2+1];
 
-    for (int i=0; i<links.size()/2+1; i++)
+    for (size_t i=0; i<links.size()/2+1; i++)
     {
         removeable[i] = links[i];
     }
 
-    for (int i=0; i<o_num_links/2 + 1; i++)
+    for (size_t i=0; i<o_num_links/2 + 1; i++)
     {
         Particle* r = removeable[i];
         baby->add_link(r);
@@ -335,7 +335,7 @@ void Particle::set_baby_parent_positions(Particle* baby)
 {
     // calculate baby position
     Vec3 baby_avg = position;
-    for (int i=0; i<baby->links.size(); i++)
+    for (size_t i=0; i<baby->links.size(); i++)
     {
         baby_avg += baby->links[i]->position;
     }
@@ -344,7 +344,7 @@ void Particle::set_baby_parent_positions(Particle* baby)
 
     // calculate parent position
     Vec3 papa_avg = position;
-    for (int i=0; i<links.size(); i++)
+    for (size_t i=0; i<links.size(); i++)
     {
         papa_avg += links[i]->position;
     }

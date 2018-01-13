@@ -14,5 +14,5 @@
     <save_frequency>10</save_frequency>
     <write_faces>true</write_faces>
     <write_cell_radius>false</write_cell_radius>
-    <filename>models/icosahedron.ply</filename>
+    <filename>icosahedron.ply</filename>
 </Root>
