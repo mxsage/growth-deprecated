@@ -13,6 +13,7 @@ int main()
 
     /* should the simulation continue computing? */
     std::atomic<bool> continue_computing{true};
+    std::atomic<bool> pause{false};
 
 	/* mutex to protect mesh */
 	std::mutex write_mesh;
@@ -25,12 +26,16 @@ int main()
     {
         while (continue_computing)
         {
-            s.update();
-			{
-				std::lock_guard<std::mutex> lock(write_mesh);
-				s.set_matrices();
-			}
-            redraw = true;
+            if (!pause)
+            {
+                s.update();
+                {
+                    std::lock_guard<std::mutex> lock(write_mesh);
+                    s.set_matrices();
+                }
+                redraw = true;
+            }
+            // else sleep for a tiny bit??
         }
     };
 
@@ -39,6 +44,41 @@ int main()
 
     /* define the libigl viewer */
     igl::viewer::Viewer v;
+
+    // Extend viewer menu
+    v.callback_init = [&](igl::viewer::Viewer& v)
+    {
+        // Add an additional menu window
+        //v.ngui->addWindow(Eigen::Vector2i(0, 0),"Simulation Controls");
+
+        // Add new group
+        v.ngui->addGroup("General");
+
+        v.ngui->addVariable<bool>("Pause",[&](bool val)
+            {
+                if (val)
+                {
+                    pause = true;
+                } else
+                {
+                    pause = false;
+                }
+            },[&]() {
+                if (pause)
+                {
+                    return true;
+                } else
+                {
+                    return false;
+                }
+            }
+        );
+
+        // Generate menu
+        v.screen->performLayout();
+
+        return false;
+  };
 
     /* lambda function to set mesh before draw if it has updated */
     v.callback_pre_draw =

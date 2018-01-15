@@ -1,48 +1,31 @@
-cmake_minimum_required(VERSION 3.8.2)
+cmake_minimum_required(VERSION 3.1)
 project(simulation)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-set(TARGET simulation)
+# libigl
+option(LIBIGL_USE_STATIC_LIBRARY "Use libigl as static library" ON)
+option(LIBIGL_WITH_ANTTWEAKBAR      "Use AntTweakBar"    OFF)
+option(LIBIGL_WITH_CGAL             "Use CGAL"           OFF)
+option(LIBIGL_WITH_COMISO           "Use CoMiso"         OFF)
+option(LIBIGL_WITH_CORK             "Use Cork"           OFF)
+option(LIBIGL_WITH_EMBREE           "Use Embree"         OFF)
+option(LIBIGL_WITH_LIM              "Use LIM"            OFF)
+option(LIBIGL_WITH_MATLAB           "Use Matlab"         OFF)
+option(LIBIGL_WITH_MOSEK            "Use MOSEK"          OFF)
+option(LIBIGL_WITH_NANOGUI          "Use Nanogui menu"   ON)
+option(LIBIGL_WITH_OPENGL           "Use OpenGL"         ON)
+option(LIBIGL_WITH_OPENGL_GLFW      "Use GLFW"           ON)
+option(LIBIGL_WITH_PNG              "Use PNG"            OFF)
+option(LIBIGL_WITH_PYTHON           "Use Python"         OFF)
+option(LIBIGL_WITH_TETGEN           "Use Tetgen"         OFF)
+option(LIBIGL_WITH_TRIANGLE         "Use Triangle"       OFF)
+option(LIBIGL_WITH_VIEWER           "Use OpenGL viewer"  ON)
+option(LIBIGL_WITH_XML              "Use XML"            ON)
 
-include_directories(include external/tinyxml2)
-include_directories(/usr/local/include/eigen3)
-include_directories(/Users/sagejenson/dev/libigl/include)
-include_directories(/Users/sagejenson/dev/cellgrow_test/external)
+find_package(LIBIGL REQUIRED QUIET)
 
-file(GLOB SOURCES "src/*.cpp")
-list(APPEND SOURCES external/tinyxml2/tinyxml2.cpp)
-
-add_executable(simulation ${SOURCES})
-
-# glfw
-find_package(glfw3 REQUIRED)
-include_directories(${GLFW_INCLUDE_DIRS})
-link_libraries(${GLFW_LIBRARY_DIRS})
-
-# opengl
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})
-
-# glew
-find_package(GLEW REQUIRED)
-include_directories(${GLEW_INCLUDE_DIRS})
-
-if (APPLE)
-    find_library(COCOA_LIBRARY Cocoa)
-    find_library(OpenGL_LIBRARY OpenGL)
-    find_library(IOKIT_LIBRARY IOKit)
-    find_library(COREVIDEO_LIBRARY CoreVideo)
-    SET(EXTRA_LIBS ${COCOA_LIBRARY} ${OpenGL_LIBRARY} ${IOKIT_LIBRARY} ${COREVIDEO_LIBRARY})
-endif (APPLE)
-
-target_link_libraries(
-        ${TARGET}
-        glfw
-        ${OPENGL_LIBRARIES}
-        ${GLEW_LIBRARIES}
-        ${EXTRA_LIBS}
-)
+# Add your project files
+file(GLOB SOURCES src/*.cpp)
+add_executable(${PROJECT_NAME}_bin ${SOURCES})
+target_link_libraries(${PROJECT_NAME}_bin igl::core igl::viewer igl::xml)

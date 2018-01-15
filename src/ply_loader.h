@@ -1,5 +1,8 @@
+#pragma once
+
 #include <igl/readPLY.h>
 #include <string>
+#include <Eigen/Dense>
 
 #include "utils.h"
 #include "particle.h"
@@ -13,7 +16,7 @@ public:
     std::vector<Particle*> create_sim();
 
 private:
-    void connect(const Eigen::Index i, const Eigen::Index j);
+    void connect(const size_t i, const size_t j);
     const std::string m_filename;
     std::vector<Particle*> cells;
 };

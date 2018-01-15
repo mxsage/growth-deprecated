@@ -4,7 +4,7 @@ PlyLoader::PlyLoader(const std::string filename) :
     m_filename(filename)
 {}
 
-void PlyLoader::connect(const Eigen::Index i, const Eigen::Index j)
+void PlyLoader::connect(const size_t i, const size_t j)
 {
     if (!cells[i]->connected_to(cells[j]))
     {
@@ -29,8 +29,8 @@ std::vector<Particle*> PlyLoader::create_sim()
         throw_runtime_error("Couldn't load ply from [" + m_filename + "]!");
     }
 
-    Eigen::Index pop = 0;
-    for (Eigen::Index i = 0; i < V.rows(); ++i)
+    size_t pop = 0;
+    for (size_t i = 0; i < V.rows(); ++i)
     {
         Particle* p = new Particle(pop);
         p->position = Eigen::Vector3d(V(i, 0), V(i, 1), V(i, 2));
