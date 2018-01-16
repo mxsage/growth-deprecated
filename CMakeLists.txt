@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(simulation)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(FRAMES_DIR "build/frames")
 
 # libigl
 option(LIBIGL_USE_STATIC_LIBRARY "Use libigl as static library" ON)
@@ -23,9 +24,10 @@ option(LIBIGL_WITH_TRIANGLE         "Use Triangle"       OFF)
 option(LIBIGL_WITH_VIEWER           "Use OpenGL viewer"  ON)
 option(LIBIGL_WITH_XML              "Use XML"            ON)
 
+file(MAKE_DIRECTORY ${FRAMES_DIR})
+
 find_package(LIBIGL REQUIRED QUIET)
 
-# Add your project files
 file(GLOB SOURCES src/*.cpp)
 add_executable(${PROJECT_NAME}_bin ${SOURCES})
 target_link_libraries(${PROJECT_NAME}_bin igl::core igl::viewer igl::xml)

@@ -84,10 +84,10 @@ void Simulation::update()
     std::cout << "Add Food. " << std::flush;
 	add_food();
 
-	std::cout << "Split." << std::flush;
+	std::cout << "Split. " << std::flush;
     split();
 
-    std::cout << "Collision.  " << std::flush;
+    std::cout << "Collision. " << std::flush;
     collision_grid();
 
     std::cout << "CPU forces. "<< std::flush;
@@ -97,7 +97,8 @@ void Simulation::update()
     update_position();
 
     std::cout << "Frame: " << frame_num;
-    std::cout <<" Pop: " << cells.size() << ".\n" << std::endl;
+
+    std::cout <<" Pop: " << cells.size() << "." << std::endl;
 
     frame_num++;
 }

@@ -48,29 +48,30 @@ int main()
     // Extend viewer menu
     v.callback_init = [&](igl::viewer::Viewer& v)
     {
-        // Add an additional menu window
-        //v.ngui->addWindow(Eigen::Vector2i(0, 0),"Simulation Controls");
-
-        // Add new group
-        v.ngui->addGroup("General");
+        v.ngui->addWindow(Eigen::Vector2i(10, 10), "Controls");
 
         v.ngui->addVariable<bool>("Pause",[&](bool val)
             {
-                if (val)
-                {
+                if (val) {
                     pause = true;
-                } else
-                {
+                } else {
                     pause = false;
                 }
             },[&]() {
-                if (pause)
-                {
+                if (pause) {
                     return true;
-                } else
-                {
+                } else {
                     return false;
                 }
+            }
+        );
+
+        v.ngui->addButton("Save Mesh", [&]()
+            {
+                std::ostringstream ss;
+                ss << outputPath + "build/frames/frame" << s.frame_num << ".ply";
+				std::lock_guard<std::mutex> lock(write_mesh);
+                igl::writePLY(ss.str(), s.V, s.F);
             }
         );
 
@@ -78,7 +79,7 @@ int main()
         v.screen->performLayout();
 
         return false;
-  };
+    };
 
     /* lambda function to set mesh before draw if it has updated */
     v.callback_pre_draw =
@@ -103,10 +104,7 @@ int main()
         {
             if (key == ' ')
             {
-                std::ostringstream ss;
-                ss << "./build/frame" << s.frame_num << ".ply";
-				std::lock_guard<std::mutex> lock(write_mesh);
-                igl::writePLY(ss.str(), s.V, s.F);
+                std::cout << "Pressed space." << std::endl;
             }
             return false;
         };
