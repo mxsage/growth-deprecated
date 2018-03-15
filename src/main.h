@@ -1,11 +1,12 @@
 #pragma once
 
-#include "utils.h"
 #include "simulation.h"
 #include "params.h"
 #include "parametersIO.h"
+#include "utils.h"
 
 #include <atomic>
+#include <chrono>
 #include <iomanip>
 #include <mutex>
 #include <thread>

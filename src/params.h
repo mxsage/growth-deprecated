@@ -41,11 +41,13 @@ namespace parameters {
         double spring_length;
         double planar_factor;
         double bulge_factor;
+        double curvature_factor;
         double collision_factor;
         double collision_radius;
 		double dampening;
         double threshold;
         int max_degree;
+		int collision_age_threshold;
 
         Shape init_shape;
         Food food_mode;

@@ -3,6 +3,7 @@ project(simulation)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(FRAMES_DIR "build/frames")
+set(FRAMES_DIR "build/parameters")
 
 # libigl
 option(LIBIGL_USE_STATIC_LIBRARY "Use libigl as static library" ON)

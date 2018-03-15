@@ -36,6 +36,8 @@ public:
 	Eigen::MatrixXd N;
     void set_matrices();
 
+	void set_parameters(const Parameters& _param);
+
     /* big array to hold all the cells */
     std::vector<Particle*> cells;
 

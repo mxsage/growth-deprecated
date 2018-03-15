@@ -186,17 +186,17 @@ void Particle::add_spring_force(const double spring_factor, const double spring_
     Vec3 target;
     for (auto l : links)
     {
+		/*
         Vec3 d = position - l->position;
         d.normalize();
         d *= spring_length;
         d += l->position - position;
         target += d;
-		/*
+		*/
         Vec3 d = l->position - position;
         d.normalize();
         d *= spring_length;
         target += d;
-		*/
     }
 
     // TODO test without averaging target
@@ -299,12 +299,16 @@ void Particle::set_links(Particle* baby, const bool longest)
 {
     order_neighbors();
 
-    // rotate the list so shortest axis is at front
+	int first_index;
     if (longest)
     {
-        int shortest_idx = find_shortest_axis();
-        std::rotate(links.begin(), links.begin() + shortest_idx, links.end());
+        first_index = find_shortest_axis();
     }
+	else
+	{
+		first_index = find_longest_axis();
+	}
+    std::rotate(links.begin(), links.begin() + first_index, links.end());
 
     size_t o_num_links = links.size();
     Particle* removeable[links.size()/2+1];
@@ -360,7 +364,7 @@ void Particle::create_baby(Particle* baby)
     baby->food = 0;
     baby->normal = normal;
     baby->position = position;
-    baby->inherited = inherited;
+    baby->inherited = inherited * .3;
 
     // set misc values dealing with obscure food distribution methods
     if (special)

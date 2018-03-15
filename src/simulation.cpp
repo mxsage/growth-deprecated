@@ -6,10 +6,16 @@
 
 Simulation::Simulation(){}
 
+void Simulation::set_parameters(const Parameters& _param)
+{
+	param = _param;
+}
+
 void Simulation::init(Parameters _param)
 {
     param = _param;
     cells.reserve(MAX_POP);
+    frame_num = 0;
 
     Geometry g;
     cells = g.create_geometry(param);
@@ -18,8 +24,7 @@ void Simulation::init(Parameters _param)
     {
         for (auto& p : cells)
         {
-            p->calculate_curvature();
-            p->inherited = p->curvature;
+			p->inherited+= std::pow((double) std::rand() / RAND_MAX, 40.0);
         }
     }
 
@@ -81,14 +86,20 @@ void Simulation::set_matrices()
 
 void Simulation::update()
 {
-    std::cout << "Add Food. " << std::flush;
-	add_food();
+    if (cells.size() < MAX_POP)
+    {
+        std::cout << "Add Food. " << std::flush;
+        add_food();
 
-	std::cout << "Split. " << std::flush;
-    split();
+        std::cout << "Split. " << std::flush;
+        split();
+    }
 
-    std::cout << "Collision. " << std::flush;
-    collision_grid();
+    if (frame_num < param.collision_age_threshold)
+    {
+        std::cout << "Collision. " << std::flush;
+        collision_grid();
+    }
 
     std::cout << "CPU forces. "<< std::flush;
     add_cpu_forces();
@@ -141,11 +152,13 @@ void Simulation::add_cpu_forces()
             }
         }
 
+		/*
         if (!p->good_loop())
         {
             p->frozen = true;
             continue;
         }
+		*/
 
         // TODO fix frozen cell behavior...
         if (!p->frozen)
@@ -197,16 +210,18 @@ void Simulation::add_food()
             }
 			else if (param.food_mode == Food::CURVATURE)
             {
-                float amount = p->curvature;
                 p->calculate_curvature();
+                double amount = p->curvature;
+				/*
                 for (Particle* q : p->links)
                 {
                     q->calculate_curvature();
                     amount += q->curvature;
                 }
+				*/
                 if ((!std::isnan(amount) && (amount > 0)))
                 {
-                    p->food += amount;
+                    p->food += std::pow(amount, param.curvature_factor);
                 }
             }
 			else if (param.food_mode == Food::INHERIT)
@@ -248,7 +263,7 @@ void Simulation::add_food()
                         p->special_baby = true;
                     }
                 }
-				else if (p->generation < 1)
+				else if (p->generation < 2)
                 {
                     p->food += p->area;
                 }
@@ -325,6 +340,7 @@ void Simulation::collision_grid()
     float c_sq = param.collision_radius * param.collision_radius;
     for (auto& p : cells)
 	{
+        if (p->age > param.collision_age_threshold) continue;
         for (auto n : g->get_neighbors(p))
 		{
             auto& q = cells[n];
@@ -385,7 +401,7 @@ void Simulation::brute_force_collision(){
 Grid* Simulation::make_grid()
 {
     Grid* g;
-    int big = 1 << 12;
+    int big = std::numeric_limits<int>::max();
     float max_x(-big), max_y(-big), max_z(-big);
     float min_x(big), min_y(big), min_z(big);
 

@@ -1,18 +1,18 @@
 <Root>
-    <spring_factor>0.3</spring_factor>
-    <spring_length>0.1</spring_length>
-    <planar_factor>2</planar_factor>
-    <bulge_factor>0.04</bulge_factor>
-    <collision_factor>2</collision_factor>
-    <collision_radius>.5</collision_radius>
-    <dampening>.2</dampening>
-    <threshold>44</threshold>
+    <spring_factor>0.10000000000000001</spring_factor>
+    <spring_length>0</spring_length>
+    <planar_factor>1</planar_factor>
+    <bulge_factor>0.10000000000000001</bulge_factor>
+    <collision_factor>1</collision_factor>
+    <collision_radius>0.29999999999999999</collision_radius>
+    <dampening>0.10000000000000001</dampening>
+    <threshold>0.10000000000000001</threshold>
     <max_degree>20</max_degree>
     <init_shape>PLY</init_shape>
     <food_mode>CURVATURE</food_mode>
     <split_mode>LONG</split_mode>
-    <save_frequency>10</save_frequency>
-    <write_faces>true</write_faces>
-    <write_cell_radius>false</write_cell_radius>
-    <filename>icosahedron.ply</filename>
+    <save_frequency>0</save_frequency>
+    <write_faces>0</write_faces>
+    <write_cell_radius>0</write_cell_radius>
+    <filename>/Users/sagejenson/dev/growth/models/icosahedron.ply</filename>
 </Root>

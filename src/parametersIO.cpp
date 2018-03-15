@@ -190,6 +190,27 @@ namespace
 namespace parameters
 {
 
+	Parameters default_params()
+	{
+		Parameters p;
+		p.spring_factor = .075;
+		p.spring_length = .1;
+		p.planar_factor = 0.4;
+		p.bulge_factor = 0.1;
+		p.collision_factor = 0.4;
+		p.collision_radius = 2;
+		p.curvature_factor = 2;
+		p.dampening = 1.0;
+		p.threshold = 44;
+		p.max_degree = 20;
+		p.init_shape = Shape::PLY;
+		p.food_mode = Food::CURVATURE;
+		p.split_mode = Split::LONG;
+		p.filename = "../models/icosahedron.ply";
+
+		return p;
+	}
+
 	template <typename T>
 	void addElement(XMLDocument& xmlDoc, XMLNode* pRoot, const std::string& elementName,
 					T element)

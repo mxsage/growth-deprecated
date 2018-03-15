@@ -11,6 +11,7 @@ using namespace tinyxml2;
 
 namespace parameters
 {
+	Parameters default_params();
 
 	inline bool XMLCheckResult(XMLError result)
 	{

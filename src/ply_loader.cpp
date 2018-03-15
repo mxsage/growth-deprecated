@@ -16,7 +16,7 @@ void PlyLoader::connect(const size_t i, const size_t j)
         cells[j]->add_link(cells[i]);
     }
 }
-
+#include <iostream>
 std::vector<Particle*> PlyLoader::create_sim()
 {
     Eigen::MatrixXd V;
@@ -24,6 +24,7 @@ std::vector<Particle*> PlyLoader::create_sim()
     Eigen::MatrixXd N;
     Eigen::MatrixXd UV;
 
+	std::cout << "m_filename: " << m_filename << std::endl;
     if (!igl::readPLY(m_filename, V, F, N, UV))
     {
         throw_runtime_error("Couldn't load ply from [" + m_filename + "]!");

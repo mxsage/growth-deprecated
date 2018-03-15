@@ -3,8 +3,8 @@
 Grid::Grid(Vec3 _max, Vec3 _min, float radius) :
     box_num(0)
 {
-    float epsilon = 0.000001;
-    radius += epsilon;
+    float epsilon = 0.01;
+    radius += std::max(epsilon, radius);
     block_size = radius;
     min = _min - Vec3 (radius, radius, radius);
     _max -= min;
