@@ -15,6 +15,7 @@ void Simulation::set_parameters(const Parameters& _param)
 
 void Simulation::init(Parameters _param)
 {
+	num_threads = std::max(uint(1), std::thread::hardware_concurrency() - 2);
     param = _param;
     cells.reserve(MAX_POP);
     frame_num = 0;
@@ -26,7 +27,7 @@ void Simulation::init(Parameters _param)
     {
         for (auto& p : cells)
         {
-			p->inherited+= std::pow((double) std::rand() / RAND_MAX, 40.0);
+			p->inherited += std::pow((double) std::rand() / RAND_MAX, 100.0);
         }
     }
 

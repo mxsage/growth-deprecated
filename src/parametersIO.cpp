@@ -193,18 +193,18 @@ namespace parameters
 	Parameters default_params()
 	{
 		Parameters p;
-		p.spring_factor = .075;
-		p.spring_length = .1;
-		p.planar_factor = 0.4;
-		p.bulge_factor = 0.1;
+		p.spring_factor = .1;
+		p.spring_length = .05;
+		p.planar_factor = 0.2;
+		p.bulge_factor = 0.0;
 		p.collision_factor = 0.4;
-		p.collision_radius = 2;
-		p.curvature_factor = 2;
-		p.dampening = 1.0;
-		p.threshold = 44;
+		p.collision_radius = .2;
+		p.curvature_factor = 1;
+		p.dampening = .2;
+		p.threshold = 10;
 		p.max_degree = 20;
 		p.init_shape = Shape::PLY;
-		p.food_mode = Food::CURVATURE;
+		p.food_mode = Food::AREA;
 		p.split_mode = Split::LONG;
 		p.filename = "../models/icosahedron.ply";
 

@@ -27,8 +27,6 @@ using namespace jk;
 class Simulation {
 public:
 
-	static const size_t num_threads{6};
-
     Simulation();
     ~Simulation();
 
@@ -87,4 +85,6 @@ public:
 
     /* grid creation helper */
     Grid* make_grid();
+
+	size_t num_threads{1};
 };
