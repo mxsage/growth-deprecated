@@ -17,8 +17,10 @@
 #include "geometry.h"
 #include "grid.h"
 #include "particle.h"
+#include "kdtree.h" 
 
 using namespace parameters;
+using namespace jk;
 
 class Simulation {
 public:
@@ -38,7 +40,7 @@ public:
 
 	void set_parameters(const Parameters& _param);
 
-    /* big array to hold all the cells */
+    /* hold all the cells */
     std::vector<Particle*> cells;
 
     /* return pointer to cells */
@@ -65,6 +67,7 @@ public:
 
     /* Calculate collisions */
     void collision_grid();
+	void collision_tree();
 
     /* Calculate collisions (brute force)*/
     void brute_force_collision();

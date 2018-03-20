@@ -98,7 +98,7 @@ void Simulation::update()
     if (frame_num < param.collision_age_threshold)
     {
         std::cout << "Collision. " << std::flush;
-        collision_grid();
+        collision_tree();
     }
 
     std::cout << "CPU forces. "<< std::flush;
@@ -320,6 +320,54 @@ void Simulation::split()
             }
 
             new_pop++;
+        }
+    }
+}
+
+void Simulation::collision_tree()
+{
+	// build tree
+	using tree_t = tree::KDTree<Particle*, 3>;
+	using point_t = std::array<double,3>;
+
+	tree_t tree;
+
+	for (const auto& p: cells)
+	{
+		tree.addPoint(point_t{{p->position.x(),p->position.y(),p->position.z()}}, p, false);
+	}
+	tree.splitOutstanding();
+
+	const size_t max_neighbors{10};
+
+    const double c_sq = param.collision_radius * param.collision_radius;
+    for (auto p : cells)
+	{
+        if (p->age > param.collision_age_threshold) continue;
+        for (auto n : tree.searchCapacityLimitedBall(point_t{{p->position.x(),p->position.y(),p->position.z()}}, c_sq, max_neighbors))
+		{
+			auto& q = n.payload;
+            Vec3 disp = p->position - q->position;
+
+            float dist = disp.squaredNorm();
+
+            if ((p!=q) and (!p->connected_to(q)))
+            {
+                disp.normalize();
+                disp *= (c_sq - dist) / c_sq;
+                p->collision_target += disp;
+                p->collisions++;
+            }
+        }
+    }
+
+    for (auto& p : cells)
+    {
+        if (p->collisions != 0)
+        {
+            p->collision_target /= (float) p->collisions;
+            p->collision_target *= param.collision_factor;
+            p->delta = p->collision_target;
         }
     }
 }

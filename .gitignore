@@ -4,3 +4,4 @@ build/*
 *.o
 external/*
 parameters/*
+src/kdtree.h

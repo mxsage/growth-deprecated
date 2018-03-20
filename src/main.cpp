@@ -199,7 +199,7 @@ int main()
             return false;
         };
 
-    v.core.is_animating = true;
+    v.core.is_animating = false;
 
     // launch the viewer
     v.launch();
