@@ -11,19 +11,24 @@
 #include <stdexcept>
 #include <memory>
 #include <chrono>
+#include <thread>
 
 #include "utils.h"
 #include "params.h"
 #include "geometry.h"
 #include "grid.h"
 #include "particle.h"
-#include "kdtree.h" 
+#include "kdtree.h"
 
 using namespace parameters;
 using namespace jk;
 
+
 class Simulation {
 public:
+
+	static const size_t num_threads{6};
+
     Simulation();
     ~Simulation();
 
@@ -60,12 +65,14 @@ public:
     void freeze_bad_particles();
 
     /* add non-collision forces() */
+	void parallel_cpu_forces(size_t min, size_t max);
     void add_cpu_forces();
 
     /* move delta */
     void update_position();
 
     /* Calculate collisions */
+	void collision_update_cell_range(size_t min, size_t max, const tree::KDTree<Particle*, 3>& tree, size_t max_neighbors);
     void collision_grid();
 	void collision_tree();
 

@@ -4,6 +4,8 @@
 
 #include "simulation.h"
 
+using point_t = std::array<double,3>;
+
 Simulation::Simulation(){}
 
 void Simulation::set_parameters(const Parameters& _param)
@@ -95,11 +97,8 @@ void Simulation::update()
         split();
     }
 
-    if (frame_num < param.collision_age_threshold)
-    {
-        std::cout << "Collision. " << std::flush;
-        collision_tree();
-    }
+	std::cout << "Collision. " << std::flush;
+	collision_tree();
 
     std::cout << "CPU forces. "<< std::flush;
     add_cpu_forces();
@@ -140,10 +139,13 @@ void Simulation::update_position()
     }
 }
 
-void Simulation::add_cpu_forces()
+void Simulation::parallel_cpu_forces(size_t min, size_t max)
 {
-    for (auto& p : cells)
-    {
+
+	for (size_t idx = min; idx < max; ++idx)
+	{
+		Particle* p = cells[idx];
+
         if (param.init_shape == Shape::ENVIRONMENT)
         {
             if (p->environs || p->frozen)
@@ -152,21 +154,32 @@ void Simulation::add_cpu_forces()
             }
         }
 
-		/*
-        if (!p->good_loop())
-        {
-            p->frozen = true;
-            continue;
-        }
-		*/
-
-        // TODO fix frozen cell behavior...
         if (!p->frozen)
         {
             p->calculate(param.spring_factor, param.planar_factor,
                     param.bulge_factor, param.spring_length);
         }
-    }
+	}
+}
+
+void Simulation::add_cpu_forces()
+{
+	std::vector<std::thread> threads;
+
+	for (size_t i = 0; i < num_threads; ++i)
+	{
+		size_t low = i * cells.size() / num_threads;
+		size_t high = (i + 1) * cells.size() / num_threads;
+		threads.emplace_back(std::thread(&Simulation::parallel_cpu_forces, this, low, high));
+	}
+
+	for (auto& thread : threads)
+	{
+		if (thread.joinable())
+		{
+			thread.join();
+		}
+	}
 }
 
 void Simulation::add_food()
@@ -324,26 +337,15 @@ void Simulation::split()
     }
 }
 
-void Simulation::collision_tree()
+
+void Simulation::collision_update_cell_range(size_t min, size_t max, const tree::KDTree<Particle*, 3>& tree, size_t max_neighbors)
 {
-	// build tree
-	using tree_t = tree::KDTree<Particle*, 3>;
-	using point_t = std::array<double,3>;
-
-	tree_t tree;
-
-	for (const auto& p: cells)
-	{
-		tree.addPoint(point_t{{p->position.x(),p->position.y(),p->position.z()}}, p, false);
-	}
-	tree.splitOutstanding();
-
-	const size_t max_neighbors{10};
-
     const double c_sq = param.collision_radius * param.collision_radius;
-    for (auto p : cells)
+	for (size_t idx = min; idx < max; ++idx)
 	{
-        if (p->age > param.collision_age_threshold) continue;
+		Particle* p = cells[idx];
+        //if (p->age > param.collision_age_threshold) continue;
+
         for (auto n : tree.searchCapacityLimitedBall(point_t{{p->position.x(),p->position.y(),p->position.z()}}, c_sq, max_neighbors))
 		{
 			auto& q = n.payload;
@@ -359,7 +361,40 @@ void Simulation::collision_tree()
                 p->collisions++;
             }
         }
-    }
+	}
+}
+
+void Simulation::collision_tree()
+{
+	// build tree
+	using tree_t = tree::KDTree<Particle*, 3>;
+
+	tree_t tree;
+
+	for (const auto& p: cells)
+	{
+		tree.addPoint(point_t{{p->position.x(),p->position.y(),p->position.z()}}, p, false);
+	}
+	tree.splitOutstanding();
+
+	const size_t max_neighbors{10};
+
+	std::vector<std::thread> threads;
+
+	for (size_t i = 0; i < num_threads; ++i)
+	{
+		size_t low = i * cells.size() / num_threads;
+		size_t high = (i + 1) * cells.size() / num_threads;
+		threads.emplace_back(std::thread(&Simulation::collision_update_cell_range, this, low, high, std::cref(tree), max_neighbors));
+	}
+
+	for (auto& thread : threads)
+	{
+		if (thread.joinable())
+		{
+			thread.join();
+		}
+	}
 
     for (auto& p : cells)
     {

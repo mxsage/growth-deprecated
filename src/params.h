@@ -2,7 +2,7 @@
 #include <string>
 
 #define MAX_CAPACITY 40
-#define MAX_POP 1000000
+#define MAX_POP 10000000
 
 namespace parameters {
 
